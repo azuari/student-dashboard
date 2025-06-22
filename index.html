@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Maklumat Pelajar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+    }
+    h2 { text-align: center; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #333;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h2>Dashboard Maklumat Pelajar</h2>
+  <table id="studentTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const sheetID = "2PACX-1vR-f8AVkLqvMEkuNrg-jgRrw1Z4dcr5UX5s3dxTRuLnjcnQmT2AqVMUT95-33-ebVf8HjrvGNBgSaiY"; // Ganti dengan ID sebenar anda
+    const sheetName = "SMB"; // Ganti dengan nama sheet
+    const url = `https://opensheet.elk.sh/${2PACX-1vR-f8AVkLqvMEkuNrg-jgRrw1Z4dcr5UX5s3dxTRuLnjcnQmT2AqVMUT95-33-ebVf8HjrvGNBgSaiY}/${SMB}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const table = document.getElementById("studentTable");
+        const thead = table.querySelector("thead");
+        const tbody = table.querySelector("tbody");
+
+        if (data.length === 0) {
+          thead.innerHTML = "<tr><th>Tiada data ditemui</th></tr>";
+          return;
+        }
+
+        // Header
+        const headers = Object.keys(data[0]);
+        thead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+
+        // Data rows
+        tbody.innerHTML = data.map(row => {
+          return "<tr>" + headers.map(h => `<td>${row[h] || ""}</td>`).join("") + "</tr>";
+        }).join("");
+      })
+      .catch(error => {
+        alert("Gagal memuat data: " + error);
+      });
+  </script>
+</body>
+</html>
