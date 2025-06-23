@@ -27,8 +27,9 @@ function populateTable(data) {
   thead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
 
   tbody.innerHTML = data.map(row => {
-    return "<tr>" + headers.map(h => `<td>${row[h] || ""}</td>`).join("") + "</tr>";
-  }).join("");
+  return "<tr>" + headers.map(h => `<td data-label="${h}">${row[h] || ""}</td>`).join("") + "</tr>";
+}).join("");
+
 }
 
 function printTable() {
