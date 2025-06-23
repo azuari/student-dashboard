@@ -78,3 +78,26 @@ tr:nth-child(even) {
     text-align: left;
   }
 }
+
+/* Cetak */
+.btn-print {
+  margin-top: 20px;
+  background: #007BFF;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.btn-print:hover {
+  background-color: #0056b3;
+}
+
+/* Ringkasan */
+.summary-card {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  border-left: 5px solid #28a745;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
