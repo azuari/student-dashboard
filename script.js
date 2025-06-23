@@ -30,3 +30,10 @@ function populateTable(data) {
     return "<tr>" + headers.map(h => `<td>${row[h] || ""}</td>`).join("") + "</tr>";
   }).join("");
 }
+
+function printTable() {
+  const originalTitle = document.title;
+  document.title = "Maklumat Pelajar";
+  window.print();
+  document.title = originalTitle;
+}
