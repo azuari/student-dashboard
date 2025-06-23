@@ -49,14 +49,19 @@ tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   table, thead, tbody, th, td, tr {
     display: block;
   }
 
-  th {
-    position: sticky;
-    top: 0;
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    padding: 10px;
   }
 
   td {
@@ -66,11 +71,9 @@ tr:nth-child(even) {
   }
 
   td::before {
+    content: attr(data-label);
     position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 45%;
-    white-space: nowrap;
+    left: 10px;
     font-weight: bold;
     text-align: left;
   }
