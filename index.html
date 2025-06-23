@@ -35,9 +35,9 @@
   </table>
 
   <script>
-    const sheetID = "2PACX-1vR-f8AVkLqvMEkuNrg-jgRrw1Z4dcr5UX5s3dxTRuLnjcnQmT2AqVMUT95-33-ebVf8HjrvGNBgSaiY"; // Ganti dengan ID sebenar anda
-    const sheetName = "SMB"; // Ganti dengan nama sheet
-    const url = `https://opensheet.elk.sh/${2PACX-1vR-f8AVkLqvMEkuNrg-jgRrw1Z4dcr5UX5s3dxTRuLnjcnQmT2AqVMUT95-33-ebVf8HjrvGNBgSaiY}/${SMB}`;
+    const sheetID = "1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g";
+    const sheetName = "SMB";
+    const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
 
     fetch(url)
       .then(response => response.json())
@@ -51,11 +51,8 @@
           return;
         }
 
-        // Header
         const headers = Object.keys(data[0]);
         thead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-
-        // Data rows
         tbody.innerHTML = data.map(row => {
           return "<tr>" + headers.map(h => `<td>${row[h] || ""}</td>`).join("") + "</tr>";
         }).join("");
