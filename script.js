@@ -33,8 +33,24 @@ function populateTable(data) {
 }
 
 function printTable() {
-  const originalTitle = document.title;
-  document.title = "Maklumat Pelajar";
   window.print();
-  document.title = originalTitle;
 }
+
+function showSummary(data) {
+  const summaryDiv = document.getElementById("summary");
+  const total = data.length;
+  let hadir = 0;
+
+  data.forEach(row => {
+    const hadirVal = parseInt(row["%KEHADIRAN"]);
+    if (!isNaN(hadirVal) && hadirVal >= 80) hadir++;
+  });
+
+  summaryDiv.innerHTML = `
+    <h3>Ringkasan</h3>
+    <p>Jumlah Pelajar: ${total}</p>
+    <p>Pelajar Hadir ≥ 80%: ${hadir}</p>
+    <p>Peratusan Hadir Tinggi: ${(hadir/total*100).toFixed(1)}%</p>
+  `;
+}
+
