@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Maklumat Pelajar</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>Dashboard Maklumat Pelajar</h2>
-  <input type="text" id="searchInput" placeholder="Cari nama atau IC...">
-  <div id="summary" class="summary-card"></div>
-
-  <table id="studentTable">
-    <thead></thead>
-    <tbody></tbody>
-  </table>
-
-  <button onclick="printTable()" class="btn-print">📄 Cetak ke PDF</button>
-
+  <div id="dashboard">
+    <h2>Dashboard Maklumat Pelajar</h2>
+    <input type="text" id="filterInput" placeholder="Cari pelajar, IC, Kelas..." />
+    <button id="printBtn">Cetak / Simpan PDF</button>
+    <table id="studentTable">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+    <div id="footer">© 2025 Dashboard Pelajar</div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
