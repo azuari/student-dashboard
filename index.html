@@ -5,24 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Maklumat Pelajar</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div id="dashboard">
     <h2>Dashboard Maklumat Pelajar</h2>
-    <select id="sheetSelector">
-  <option value="SMB">SMB</option>
-  <option value="SMO">SMO</option>
-  <option value="SMS">SMS</option>
-  <option value="SMV">SMV</option>
-</select>
-
     <input type="text" id="filterInput" placeholder="Cari pelajar, IC, Kelas..." />
+    <label class="toggle-view">
+      <input type="checkbox" id="toggleView" /> Papar dalam bentuk kad
+    </label>
     <button id="printBtn">Cetak / Simpan PDF</button>
+
+    <div id="cardContainer" class="hidden"></div>
     <table id="studentTable">
       <thead></thead>
       <tbody></tbody>
     </table>
-    <div id="footer">© 2025 Dashboard Pelajar</div>
+
+    <canvas id="grafPelajar" width="600" height="300"></canvas>
+
+    <div id="footer">
+      © 2025 Dibangunkan oleh ABU BAKAR BIN ADNAN | 
+      <a href="https://github.com/azuari/student-dashboard" target="_blank">GitHub Repo</a>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
