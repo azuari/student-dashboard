@@ -1,57 +1,68 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const fetchURL = "https://opensheet.elk.sh/1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g/SMB";
-  const tableBody = document.querySelector("#studentTable tbody");
-  const filterCourse = document.getElementById("filterCourse");
-  const filterCode = document.getElementById("filterCode");
-  const filterBtn = document.getElementById("filterBtn");
-  const cardContainer = document.getElementById("cardContainer");
+const sheetUrl = 'https://opensheet.elk.sh/1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g/SMB';
+let attendanceChart;
 
-  let data = [];
+window.addEventListener('DOMContentLoaded', init);
 
-  fetch(fetchURL)
-    .then(r => r.json())
-    .then(json => {
-      data = json;
-      renderTable(data);
-    })
-    .catch(e => {
-      alert("Gagal muat data: " + e);
-    });
+function init() {
+  document.getElementById('filter-btn').addEventListener('click', loadData);
+  document.getElementById('download-btn').addEventListener('click', downloadPDF);
+  setupChart();
+}
 
-  filterBtn.addEventListener("click", () => {
-    const code = filterCode.value.trim().toUpperCase();
-    const filtered = data.filter(d => d["KOD KELAS"]?.toUpperCase() === code);
-    renderCard(filtered[0]);
-  });
-
-  function renderTable(data) {
-    tableBody.innerHTML = data.map(row => `
-      <tr>
-        <td>${row["KOD KELAS"] || ""}</td>
-        <td>${row["NAMA"] || ""}</td>
-        <td>${row["IC"] || ""}</td>
-      </tr>`).join("");
-  }
-
-  function renderCard(row) {
-    cardContainer.innerHTML = "";
-    if (!row) {
-      cardContainer.innerHTML = "<p>Tiada data untuk kod kelas tersebut.</p>";
-      return;
+function setupChart() {
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+  attendanceChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Hadir', 'Tidak Hadir'],
+      datasets: [{
+        data: [0, 0],
+        backgroundColor: ['#46BFBD', '#F7464A'],
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
     }
-    const card = document.createElement("div");
-    card.className = "card";
-    const nama = row["NAMA"];
-    const ic = row["IC"];
-    const kehadiran = parseFloat(row["%KEHADIRAN"]) || 0;
-    card.innerHTML = `
-      <h3>${nama}</h3>
-      <p>IC: ${ic}</p>
-      <div class="progress-container">
-        <div class="progress-bar" style="width:${kehadiran}%">
-          ${kehadiran}%
-        </div>
-      </div>`;
-    cardContainer.appendChild(card);
-  }
-});
+  });
+}
+
+function loadData() {
+  const code = document.getElementById('filter-class').value.trim();
+  if (!code) return alert('Sila masukkan kod kelas.');
+
+  fetch(sheetUrl)
+    .then(resp => resp.json())
+    .then(data => {
+      const filtered = data.filter(r => r['KOD KELAS'] === code);
+      displayCards(filtered);
+      updateChart(filtered);
+    })
+    .catch(err => alert('Gagal memuat data: ' + err));
+}
+
+function displayCards(rows) {
+  const container = document.getElementById('cards-container');
+  container.innerHTML = '';
+  rows.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <strong>${r['NAMA']}</strong><br>
+      IC: ${r['IC']}<br>
+      Kelas: ${r['KOD KELAS']}
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateChart(rows) {
+  const hadirCount = rows.filter(r => parseFloat(r['%KEHADIRAN']) >= 50).length;
+  const tidakCount = rows.length - hadirCount;
+  attendanceChart.data.datasets[0].data = [hadirCount, tidakCount];
+  attendanceChart.update();
+}
+
+function downloadPDF() {
+  alert('Fungsi PDF akan datang 😊');
+}
