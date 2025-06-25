@@ -1,40 +1,81 @@
+/* Reset & Tipografi Asas */
 body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
-  padding: 40px;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+/* Tajuk & Input Filter */
+h2 {
   text-align: center;
 }
-.filter input {
-  width: 300px;
-  padding: 8px;
-}
-#cards-container {
-  margin: 20px auto;
+#filterBar {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-.card {
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  width: 250px;
-  margin: 10px;
-  padding: 15px;
+#filterBar input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  font-size: 1em;
+}
+#filterBar button {
+  padding: 8px 16px;
+  font-size: 1em;
+}
+
+/* Jadual Ringkasan Awal (Kod Kelas, Nama, IC) */
+#studentTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+#studentTable th, #studentTable td {
+  border: 1px solid #ccc;
+  padding: 8px;
   text-align: left;
 }
-#attendanceChart {
-  margin: 30px auto;
+#studentTable th {
+  background: #444;
+  color: #fff;
 }
-#download-btn {
-  margin-top: 20px;
+
+/* Kad Pelajar & Carta */
+.student-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 600px;
+}
+.student-card h3 {
+  margin: 0 0 10px;
+}
+.student-card p {
+  margin: 6px 0;
+}
+.canvas-container {
+  width: 100%;
+  margin: 20px 0;
+}
+
+/* Butang PDF */
+#downloadPdf {
+  display: block;
+  margin: 20px auto;
   padding: 10px 20px;
-  background: #4A90E2;
+  background: #28a745;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
-#download-btn:hover {
-  background: #357ABD;
+#downloadPdf:hover {
+  background: #218838;
 }
