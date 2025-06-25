@@ -79,3 +79,26 @@ h2 {
 #printBtn:hover {
   background-color: #3d5f8d;
 }
+#sheetSelector {
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+#filterInput {
+  padding: 10px;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#dashboard {
+  max-width: 1000px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
