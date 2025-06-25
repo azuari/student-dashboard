@@ -1,114 +1,57 @@
-const sheetID = "1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g"; // Gantikan dengan ID sebenar
-const sheetName = "SMB";
-const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+document.addEventListener("DOMContentLoaded", () => {
+  const fetchURL = "https://opensheet.elk.sh/1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g/SMB";
+  const tableBody = document.querySelector("#studentTable tbody");
+  const filterCourse = document.getElementById("filterCourse");
+  const filterCode = document.getElementById("filterCode");
+  const filterBtn = document.getElementById("filterBtn");
+  const cardContainer = document.getElementById("cardContainer");
 
-let studentData = [];
+  let data = [];
 
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    studentData = data;
-    renderTable(data);
-    renderChart(data);
-  })
-  .catch(error => alert("Gagal memuat data: " + error));
+  fetch(fetchURL)
+    .then(r => r.json())
+    .then(json => {
+      data = json;
+      renderTable(data);
+    })
+    .catch(e => {
+      alert("Gagal muat data: " + e);
+    });
 
-function renderTable(data) {
-  const table = document.getElementById("studentTable");
-  const thead = table.querySelector("thead");
-  const tbody = table.querySelector("tbody");
-
-  if (data.length === 0) {
-    thead.innerHTML = "<tr><th>Tiada data ditemui</th></tr>";
-    return;
-  }
-
-  const headers = Object.keys(data[0]);
-  thead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-
-  tbody.innerHTML = data.map(row => {
-    return "<tr>" + headers.map(h => `<td>${row[h] || ""}</td>`).join("") + "</tr>";
-  }).join("");
-}
-
-function renderCards(data) {
-  const container = document.getElementById("cardContainer");
-  container.innerHTML = data.map(row => {
-    return `
-      <div class="card">
-        <h3>${row.NAMA || ""}</h3>
-        <p><strong>IC:</strong> ${row.IC || ""}</p>
-        <p><strong>Kelas:</strong> ${row.KELAS || ""}</p>
-        <p><strong>Markah:</strong> ${row.MARKAH || ""}</p>
-      </div>
-    `;
-  }).join("");
-}
-
-document.getElementById("toggleView").addEventListener("change", function() {
-  const table = document.getElementById("studentTable");
-  const cards = document.getElementById("cardContainer");
-  if (this.checked) {
-    table.classList.add("hidden");
-    cards.classList.remove("hidden");
-    renderCards(studentData);
-  } else {
-    cards.classList.add("hidden");
-    table.classList.remove("hidden");
-    renderTable(studentData);
-  }
-});
-
-document.getElementById("filterInput").addEventListener("input", function() {
-  const keyword = this.value.toLowerCase();
-  const filtered = studentData.filter(row => {
-    return Object.values(row).some(val => (val || "").toLowerCase().includes(keyword));
-  });
-  if (document.getElementById("toggleView").checked) {
-    renderCards(filtered);
-  } else {
-    renderTable(filtered);
-  }
-});
-
-document.getElementById("printBtn").addEventListener("click", function() {
-  window.print();
-});
-
-function renderChart(data) {
-  const ctx = document.getElementById("grafPelajar").getContext("2d");
-  const kelasMarkah = {};
-
-  data.forEach(row => {
-    const kelas = row.KELAS || "Lain-lain";
-    const markah = parseFloat(row.MARKAH || 0);
-    if (!kelasMarkah[kelas]) kelasMarkah[kelas] = [];
-    kelasMarkah[kelas].push(markah);
+  filterBtn.addEventListener("click", () => {
+    const code = filterCode.value.trim().toUpperCase();
+    const filtered = data.filter(d => d["KOD KELAS"]?.toUpperCase() === code);
+    renderCard(filtered[0]);
   });
 
-  const labels = Object.keys(kelasMarkah);
-  const avgMarkah = labels.map(k => {
-    const sum = kelasMarkah[k].reduce((a, b) => a + b, 0);
-    return (sum / kelasMarkah[k].length).toFixed(2);
-  });
+  function renderTable(data) {
+    tableBody.innerHTML = data.map(row => `
+      <tr>
+        <td>${row["KOD KELAS"] || ""}</td>
+        <td>${row["NAMA"] || ""}</td>
+        <td>${row["IC"] || ""}</td>
+      </tr>`).join("");
+  }
 
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Purata Markah Mengikut Kelas",
-        data: avgMarkah,
-        backgroundColor: "#007bff"
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+  function renderCard(row) {
+    cardContainer.innerHTML = "";
+    if (!row) {
+      cardContainer.innerHTML = "<p>Tiada data untuk kod kelas tersebut.</p>";
+      return;
     }
-  });
-}
+    const card = document.createElement("div");
+    card.className = "card";
+    const nama = row["NAMA"];
+    const ic = row["IC"];
+    const kehadiran = parseFloat(row["%KEHADIRAN"]) || 0;
+    card.innerHTML = `
+      <h3>${nama}</h3>
+      <p>IC: ${ic}</p>
+      <div class="progress-container">
+        <div class="progress-bar" style="width:${kehadiran}%">
+          ${kehadiran}%
+        </div>
+      </div>`;
+    cardContainer.appendChild(card);
+  }
+});
