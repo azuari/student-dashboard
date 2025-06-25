@@ -2,26 +2,29 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Maklumat Pelajar</title>
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h2>Dashboard Maklumat Pelajar</h2>
-  <div class="controls">
-    <label>Kursus:
-      <select id="courseSelect">
-        <option>SMB</option><option>SMO</option><option>SMS</option><option>SMV</option>
-      </select>
-    </label>
-    <label>Kod Kelas: <input id="classInput" placeholder="Contoh: SMB101"></label>
-    <button id="loadBtn">Muatkan Data</button>
-    <button id="downloadPdfBtn">Muat Turun PDF</button>
-  </div>
-  <div id="cardContainer"></div>
-  <canvas id="attendanceChart" width="400" height="200"></canvas>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="script.js"></script>
-</body>
-</html>
+<div class="container">
+  <h2>Dashboard Maklumat Pelajar</h2>
+  <div class="table-wrapper">
+    <table id="studentTable">
+      <thead>
+        <tr>
+          <th>Kod Kelas</th>
+          <th>Nama</th>
+          <th>IC</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="filter">
+    <input type="text" id="filterCode" placeholder="Masukkan Kod Kelas">
+    <button id="filterBtn">Cari</button>
+  </div>
+
+  <div id="cardContainer"></div>
+</div>
+
+<script src="script.js"></script>
