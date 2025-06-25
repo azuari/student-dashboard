@@ -2,29 +2,24 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
+  <title>Dashboard Pelajar</title>
   <link rel="stylesheet" href="style.css">
-
-<div class="container">
+</head>
+<body>
   <h2>Dashboard Maklumat Pelajar</h2>
-  <div class="table-wrapper">
-    <table id="studentTable">
-      <thead>
-        <tr>
-          <th>Kod Kelas</th>
-          <th>Nama</th>
-          <th>IC</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
+  
   <div class="filter">
-    <input type="text" id="filterCode" placeholder="Masukkan Kod Kelas">
-    <button id="filterBtn">Cari</button>
+    <input id="filter-class" placeholder="Masukkan Kod Kelas">
+    <button id="filter-btn">Cari</button>
   </div>
 
-  <div id="cardContainer"></div>
-</div>
+  <div id="cards-container"></div>
 
-<script src="script.js"></script>
+  <canvas id="attendanceChart" width="200" height="200"></canvas>
+
+  <button id="download-btn">Muat Turun PDF</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
