@@ -9,14 +9,23 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <h2>Dashboard Maklumat Pelajar</h2>
   <div class="container">
-    <div class="filter">…</div>
+    <h2>Dashboard Maklumat Pelajar</h2>
+
+    <div class="filter">
+      <input id="filter-class" placeholder="Masukkan Kod Kelas atau Nama">
+      <button id="filter-btn">Cari</button>
+    </div>
+
     <div id="cards-container"></div>
-    <canvas id="attendanceChart"></canvas>
+
+    <div class="chart-wrapper">
+      <canvas id="attendanceChart"></canvas>
+    </div>
+
     <button id="download-btn">Muat Turun PDF</button>
   </div>
+
   <script src="script.js"></script>
 </body>
-
 </html>
