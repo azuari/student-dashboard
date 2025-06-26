@@ -1,88 +1,59 @@
-/* Container & Layout */
-body {
-  margin: 0; padding: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-}
+/* Reset ringkas */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f4f4f4; }
 .container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
+  max-width: 600px; margin: 20px auto; padding: 20px;
+  background: #fff; border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+.logo { text-align: center; margin-bottom: 10px; }
+.logo img { max-width: 120px; }
 
-/* Filter */
+h2 { text-align: center; margin-bottom: 20px; }
+
 .filter {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  display: flex; gap: 8px; margin-bottom: 20px;
+  flex-wrap: wrap;
 }
-.filter input {
-  flex: 1;
-  padding: 8px;
+.filter select, .filter input {
+  flex: 1; min-width: 120px;
+  padding: 8px; font-size: 14px;
 }
 .filter button {
-  padding: 8px 16px;
+  padding: 8px 16px; font-size: 14px; cursor: pointer;
 }
 
-/* Student Cards */
 #cards-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
   margin-bottom: 20px;
 }
 .card {
-  padding: 12px;
-  background: #f9f9f9;
-  border-radius: 6px;
+  padding: 12px; background: #fafafa;
   border-left: 4px solid #4CAF50;
-}
-.card h3 {
-  margin: 0 0 6px;
-}
-.card p {
-  margin: 2px 0;
+  margin-bottom: 10px; border-radius: 4px;
   font-size: 14px;
 }
+.card h3 { margin-bottom: 4px; font-size: 16px; }
+.card p { margin: 2px 0; }
 
-/* Chart */
 .chart-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  display: flex; justify-content: center; margin-bottom: 20px;
 }
 #attendanceChart {
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 180px; max-height: 180px;
 }
 
-/* PDF Button */
 #download-btn {
-  width: 100%;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  width: 100%; padding: 10px; 
+  background: #2196F3; color: white;
+  border: none; border-radius: 4px;
+  font-size: 16px; cursor: pointer;
 }
 #download-btn:hover {
   background: #1976D2;
 }
 
-/* Mobile tweaks */
+/* Responsif */
 @media (max-width: 480px) {
-  .filter {
-    flex-direction: column;
-  }
-  .filter button {
-    width: 100%;
-  }
+  .filter { flex-direction: column; }
+  .filter button { width: 100%; }
 }
