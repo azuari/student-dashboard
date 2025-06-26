@@ -43,69 +43,89 @@ function initDashboard(data) {
       </tr>`;
   });
 
-  document.getElementById('searchBtn').onclick = () => searchStudent(data);
-  document.getElementById('downloadPdf').onclick = downloadPdf;
-}
+document.getElementById('filter-btn').addEventListener('click', loadData);
+document.getElementById('download-btn').addEventListener('click', downloadPDF);
 
-// Cari pelajar dan paparkan dalam kad
-function searchStudent(data) {
-  const kod = document.getElementById('filterClass').value.trim().toLowerCase();
-  const nama = document.getElementById('filterName').value.trim().toLowerCase();
+let chart;
 
-  const found = data.find(r => {
-    return (!kod || r['KOD KELAS'].toLowerCase() === kod)
-      && (!nama || r['NAMA'].toLowerCase().includes(nama));
-  });
+async function loadData() {
+  const query = document.getElementById('filter-class').value.trim().toLowerCase();
+  if (!query) return alert('Sila masukkan Kod Kelas atau Nama.');
 
-  const resultCard = document.getElementById('resultCard');
-  resultCard.innerHTML = '';  // Kosongkan
+  const url = 'https://opensheet.elk.sh/YOUR_SHEET_ID/SMB';
+  try {
+    const resp = await fetch(url);
+    const rows = await resp.json();
 
-  if (!found) {
-    resultCard.innerHTML = `<p>Tiada data ditemui.</p>`;
-    return;
-  }
+    const students = rows.filter(r =>
+      r['KOD KELAS']?.toLowerCase().includes(query) ||
+      r['NAMA']?.toLowerCase().includes(query)
+    );
 
-  resultCard.innerHTML = `
-    <div class="card">
-      <h3>${found['NAMA']}</h3>
-      <p><strong>KOD KELAS:</strong> ${found['KOD KELAS']}</p>
-      <p><strong>IC:</strong> ${found['IC']}</p>
-      <canvas id="attendanceChart" width="200" height="200"></canvas>
-      <p><strong>KUIZ 1:</strong> ${found['KUIZ 1']} | <strong>KUIZ 2:</strong> ${found['KUIZ 2']}</p>
-      <p><strong>TUGASAN:</strong> ${found['TUGASAN']} | <strong>UJIAN 1:</strong> ${found['UJIAN 1']} | <strong>UJIAN 2:</strong> ${found['UJIAN 2']}</p>
-    </div>`;
-
-  // Lukis graf kehadiran jika Chart.js ada
-  const ctx = document.getElementById('attendanceChart')?.getContext('2d');
-  if (ctx) {
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Hadir', 'Tidak Hadir'],
-        datasets: [{
-          data: [+found['%KEHADIRAN'], 100 - +found['%KEHADIRAN']],
-          backgroundColor: ['#4caf50', '#e0e0e0'],
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
+    showCards(students);
+    drawChart(students);
+  } catch (e) {
+    alert('Gagal memuat data: ' + e);
   }
 }
 
-// Muat turun PDF menggunakan html2canvas + jsPDF
-function downloadPdf() {
-  const el = document.querySelector('#resultCard .card');
-  if (!el) {
-    alert('Sila cari maklumat pelajar terlebih dahulu.');
+function showCards(students) {
+  const container = document.getElementById('cards-container');
+  container.innerHTML = '';
+  if (!students.length) {
+    container.innerHTML = '<p>Tiada rekod ditemui.</p>';
     return;
   }
 
-  html2canvas(el).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jspdf.jsPDF({ orientation: 'portrait' });
-    const w = pdf.internal.pageSize.getWidth();
-    const h = (canvas.height * w) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, w, h);
-    pdf.save('Laporan_Pelajar.pdf');
+  students.forEach(st => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <h3>${st['KOD KELAS']} - ${st['NAMA']}</h3>
+      <p><strong>IC:</strong> ${st['IC']}</p>
+    `;
+    container.appendChild(div);
   });
+}
+
+function drawChart(students) {
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+  if (chart) chart.destroy();
+
+  const present = students.reduce((sum, s) => sum + (+s['%KEHADIRAN'] || 0), 0);
+  const avg = students.length ? (present / students.length).toFixed(1) : 0;
+
+  chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [`Purata Kehadiran (${avg}%)`, 'Baki (%)'],
+      datasets: [{
+        data: [avg, 100 - avg],
+        backgroundColor: ['#4CAF50', '#e0e0e0']
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: {
+        tooltip: { callbacks: { label: ctx => ctx.label } },
+        legend: { display: false },
+        title: { display: true, text: 'Purata Kehadiran (%)' }
+      }
+    }
+  });
+}
+
+async function downloadPDF() {
+  const container = document.querySelector('.container');
+  const canvas = await html2canvas(container, { scale: 2 });
+  const imgData = canvas.toDataURL('image/png');
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const imgProps = pdf.getImageProperties(imgData);
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+  pdf.save('dashboard_pelajar.pdf');
 }
