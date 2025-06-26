@@ -2,40 +2,40 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Pelajar</title>
+  <title>Dashboard Pelajar IKBN</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <!-- Logo IKBN -->
-    <div class="logo"><img src="logo-ikbn.png" alt="Logo IKBN"></div>
-
+  <div class="card main-card">
+    <img src="logo-ikbn.png" alt="Logo IKBN" class="logo">
     <h2>Dashboard Maklumat Pelajar</h2>
 
-    <!-- Dropdown kursus, input kod/nama, butang cari -->
-    <div class="filter">
-      <select id="filter-course">
-        <option value="">Pilih Kursus</option>
-        <option value="SMB">SMB</option>
-        <option value="SMO">SMO</option>
-        <option value="SMS">SMS</option>
-        <option value="SMV">SMV</option>
-      </select>
-      <input id="filter-input" placeholder="Masukkan Kod Kelas / Nama">
-      <button id="filter-btn">Cari</button>
+    <div class="form-group">
+      <label for="courseSelect">Pilih Kursus:</label>
+      <select id="courseSelect" class="dropdown"></select>
     </div>
 
-    <!-- Senarai hasil -->
-    <div id="cards-container"></div>
+    <div class="form-group">
+      <label for="studentSelect">Pilih Pelajar:</label>
+      <select id="studentSelect" class="dropdown"></select>
+    </div>
 
-    <!-- Carta kehadiran -->
-    <div class="chart-wrapper"><canvas id="attendanceChart"></canvas></div>
+    <button id="filter-btn" class="btn primary">Tunjuk Maklumat</button>
 
-    <!-- Muat turun PDF -->
-    <button id="download-btn">Muat Turun PDF</button>
+    <div id="infoCard" class="info-card hidden">
+      <p><strong>KOD KELAS:</strong> <span id="infoCode"></span></p>
+      <p><strong>NAMA:</strong> <span id="infoName"></span></p>
+      <p><strong>IC:</strong> <span id="infoIC"></span></p>
+    </div>
+
+    <canvas id="attendanceChart" class="chart hidden"></canvas>
+
+    <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
+
+    <p class="footer">© by Abu Bakar</p>
   </div>
 
   <script src="script.js"></script>
