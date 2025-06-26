@@ -49,56 +49,63 @@ document.getElementById('download-btn').addEventListener('click', downloadPDF);
 let chart;
 
 async function loadData() {
-  const query = document.getElementById('filter-class').value.trim().toLowerCase();
-  if (!query) return alert('Sila masukkan Kod Kelas atau Nama.');
+  const course = document.getElementById('filter-course').value;
+  const query = document.getElementById('filter-input').value.trim().toLowerCase();
 
-  const url = 'https://opensheet.elk.sh/YOUR_SHEET_ID/SMB';
+  if (!course) return alert('Sila pilih kursus.');
+  if (!query) return alert('Masukkan kod kelas atau nama pelajar.');
+
+  const sheetID = 'YOUR_SHEET_ID';
+  const url = `https://opensheet.elk.sh/${sheetID}/${course}`;
+
   try {
     const resp = await fetch(url);
     const rows = await resp.json();
 
-    const students = rows.filter(r =>
+    const filtered = rows.filter(r =>
       r['KOD KELAS']?.toLowerCase().includes(query) ||
       r['NAMA']?.toLowerCase().includes(query)
     );
 
-    showCards(students);
-    drawChart(students);
+    showCards(filtered);
+    drawChart(filtered);
   } catch (e) {
     alert('Gagal memuat data: ' + e);
   }
 }
 
 function showCards(students) {
-  const container = document.getElementById('cards-container');
-  container.innerHTML = '';
+  const cont = document.getElementById('cards-container');
+  cont.innerHTML = '';
   if (!students.length) {
-    container.innerHTML = '<p>Tiada rekod ditemui.</p>';
+    cont.innerHTML = '<p>Tiada rekod ditemui.</p>';
     return;
   }
-
-  students.forEach(st => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <h3>${st['KOD KELAS']} - ${st['NAMA']}</h3>
-      <p><strong>IC:</strong> ${st['IC']}</p>
+  students.forEach(s => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.innerHTML = `
+      <h3>${s['KOD KELAS']} - ${s['NAMA']}</h3>
+      <p><strong>IC:</strong> ${s['IC']}</p>
+      <p><strong>Kehadiran:</strong> ${s['%KEHADIRAN'] || '0'}%</p>
+      <p><strong>Kuiz1:</strong> ${s['KUIZ 1']}, <strong>Kuiz2:</strong> ${s['KUIZ 2']}</p>
+      <p><strong>Ujian1:</strong> ${s['UJIAN 1']}, <strong>Ujian2:</strong> ${s['UJIAN 2']}</p>
     `;
-    container.appendChild(div);
+    cont.appendChild(c);
   });
 }
 
 function drawChart(students) {
   const ctx = document.getElementById('attendanceChart').getContext('2d');
-  if (chart) chart.destroy();
+  chart?.destroy();
 
-  const present = students.reduce((sum, s) => sum + (+s['%KEHADIRAN'] || 0), 0);
-  const avg = students.length ? (present / students.length).toFixed(1) : 0;
+  const sumPerc = students.reduce((a, s) => a + (+s['%KEHADIRAN'] || 0), 0);
+  const avg = students.length ? (sumPerc / students.length).toFixed(1) : 0;
 
   chart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: [`Purata Kehadiran (${avg}%)`, 'Baki (%)'],
+      labels: [`Purata Kehadiran (${avg}%)`, ''],
       datasets: [{
         data: [avg, 100 - avg],
         backgroundColor: ['#4CAF50', '#e0e0e0']
@@ -107,25 +114,24 @@ function drawChart(students) {
     options: {
       cutout: '70%',
       plugins: {
-        tooltip: { callbacks: { label: ctx => ctx.label } },
         legend: { display: false },
-        title: { display: true, text: 'Purata Kehadiran (%)' }
+        title: { display: true, text: 'Purata Kehadiran' }
       }
     }
   });
 }
 
 async function downloadPDF() {
-  const container = document.querySelector('.container');
-  const canvas = await html2canvas(container, { scale: 2 });
-  const imgData = canvas.toDataURL('image/png');
+  const cont = document.querySelector('.container');
+  const canv = await html2canvas(cont, { scale: 2 });
+  const img = canv.toDataURL('image/png');
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p', 'mm', 'a4');
-  const imgProps = pdf.getImageProperties(imgData);
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const props = pdf.getImageProperties(img);
+  const w = pdf.internal.pageSize.getWidth();
+  const h = (props.height * w) / props.width;
 
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  pdf.save('dashboard_pelajar.pdf');
+  pdf.addImage(img, 'PNG', 0, 0, w, h);
+  pdf.save('dashboard-pelajar.pdf');
 }
