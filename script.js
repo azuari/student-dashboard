@@ -70,7 +70,7 @@ function searchStudent(data) {
       <h3>${found['NAMA']}</h3>
       <p><strong>KOD KELAS:</strong> ${found['KOD KELAS']}</p>
       <p><strong>IC:</strong> ${found['IC']}</p>
-      <canvas id="attendanceChart" width="300" height="200"></canvas>
+      <canvas id="attendanceChart" width="200" height="200"></canvas>
       <p><strong>KUIZ 1:</strong> ${found['KUIZ 1']} | <strong>KUIZ 2:</strong> ${found['KUIZ 2']}</p>
       <p><strong>TUGASAN:</strong> ${found['TUGASAN']} | <strong>UJIAN 1:</strong> ${found['UJIAN 1']} | <strong>UJIAN 2:</strong> ${found['UJIAN 2']}</p>
     </div>`;
