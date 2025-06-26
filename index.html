@@ -10,19 +10,31 @@
 </head>
 <body>
   <div class="container">
+    <!-- Logo IKBN -->
+    <div class="logo"><img src="logo-ikbn.png" alt="Logo IKBN"></div>
+
     <h2>Dashboard Maklumat Pelajar</h2>
 
+    <!-- Dropdown kursus, input kod/nama, butang cari -->
     <div class="filter">
-      <input id="filter-class" placeholder="Masukkan Kod Kelas atau Nama">
+      <select id="filter-course">
+        <option value="">Pilih Kursus</option>
+        <option value="SMB">SMB</option>
+        <option value="SMO">SMO</option>
+        <option value="SMS">SMS</option>
+        <option value="SMV">SMV</option>
+      </select>
+      <input id="filter-input" placeholder="Masukkan Kod Kelas / Nama">
       <button id="filter-btn">Cari</button>
     </div>
 
+    <!-- Senarai hasil -->
     <div id="cards-container"></div>
 
-    <div class="chart-wrapper">
-      <canvas id="attendanceChart"></canvas>
-    </div>
+    <!-- Carta kehadiran -->
+    <div class="chart-wrapper"><canvas id="attendanceChart"></canvas></div>
 
+    <!-- Muat turun PDF -->
     <button id="download-btn">Muat Turun PDF</button>
   </div>
 
