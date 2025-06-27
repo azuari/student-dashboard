@@ -1,83 +1,72 @@
-const sheetId = '1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g'; // ID anda
-const tabs = ['SMB','SMO','SMS','SMV'];
+const sheetId = '1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g';
+const courses = ['SMB','SMO','SMS','SMV'];
 
-const courseSel = document.getElementById('courseSelect');
-const studentSel = document.getElementById('studentSelect');
-const loadBtn = document.getElementById('loadBtn');
-const resetBtn = document.getElementById('resetBtn');
-const infoCard = document.getElementById('infoCard');
-const infoCode = document.getElementById('infoCode');
-const infoName = document.getElementById('infoName');
-const infoIC = document.getElementById('infoIC');
-const chartCtx = document.getElementById('attendanceChart');
-const downloadBtn = document.getElementById('downloadBtn');
-let chart;
+document.addEventListener('DOMContentLoaded', () => {
+  const selCourse = document.getElementById('courseSelect');
+  selCourse.innerHTML = '<option value="">-- Pilih Kursus --</option>' +
+    courses.map(c => `<option>${c}</option>`).join('');
 
-tabs.forEach(t => {
-  let opt = document.createElement('option');
-  opt.value = t; opt.textContent = t;
-  courseSel.appendChild(opt);
+  selCourse.addEventListener('change', loadStudents);
+  document.getElementById('filter-btn').addEventListener('click', showStudent);
+  document.getElementById('reset-btn').addEventListener('click', resetAll);
 });
 
-courseSel.addEventListener('change', () => {
-  const tab = courseSel.value;
-  resetStudent();
-  if (!tab) return;
-  fetch(`https://opensheet.elk.sh/${sheetId}/${tab}`)
-    .then(r => r.json())
-    .then(data => {
-      studentSel.innerHTML = '<option value="">Pilih Pelajar …</option>';
-      data.forEach(r => {
-        let o = document.createElement('option');
-        o.value = JSON.stringify(r);
-        o.textContent = r.NAMA;
-        studentSel.appendChild(o);
-      });
-      studentSel.disabled = false;
-    })
-    .catch(() => alert('Gagal memuat data kursus'));
-});
+let studentsData = [];
 
-loadBtn.addEventListener('click', () => {
-  const sel = studentSel.value;
-  if (!sel) return alert('Sila pilih pelajar');
-  const d = JSON.parse(sel);
-  infoCode.textContent = d['KOD KELAS'];
-  infoName.textContent = d['NAMA'];
-  infoIC.textContent = d['IC'];
-  infoCard.classList.remove('hidden');
-  renderChart(d['%KEHADIRAN']);
-  downloadBtn.classList.remove('hidden');
-});
+async function loadStudents(){
+  const course = this.value;
+  resetAll(true);
+  if (!course) return;
 
-studentSel.addEventListener('change', () => {
-  loadBtn.disabled = !studentSel.value;
-});
-
-resetBtn.addEventListener('click', () => {
-  courseSel.value = '';
-  resetStudent();
-  infoCard.classList.add('hidden');
-  chartCtx.classList.add('hidden');
-  downloadBtn.classList.add('hidden');
-  if (chart) chart.destroy();
-});
-
-function resetStudent(){
-  studentSel.disabled = true;
-  studentSel.innerHTML = '<option value="">Pilih Pelajar …</option>';
-  loadBtn.disabled = true;
+  const url = `https://opensheet.elk.sh/${sheetId}/${course}`;
+  try {
+    studentsData = await (await fetch(url)).json();
+    const selStu = document.getElementById('studentSelect');
+    selStu.innerHTML = '<option value="">-- Pilih Pelajar --</option>' +
+      studentsData.map(r => `<option value="${r.NAMA}">${r.NAMA}</option>`).join('');
+    selStu.disabled = false;
+  } catch(err){
+    alert('Gagal muat data pelajar: '+ err);
+  }
 }
 
-function renderChart(percent){
-  chartCtx.classList.remove('hidden');
-  if (chart) chart.destroy();
-  chart = new Chart(chartCtx, {
+function showStudent(){
+  const name = document.getElementById('studentSelect').value;
+  if (!name) return;
+
+  const rec = studentsData.find(r => r.NAMA === name);
+  if (!rec) return;
+
+  document.getElementById('infoCard').classList.remove('hidden');
+  ['infoCode','infoName','infoIC'].forEach(id => {
+    document.getElementById(id).textContent = rec['KOD KELAS'] || rec['IC'] || rec['NAMA'];
+  });
+
+  // Chart Plot
+  const ctx = document.getElementById('attendanceChart');
+  ctx.classList.remove('hidden');
+  new Chart(ctx.getContext('2d'), {
     type: 'doughnut',
     data: {
-      labels: ['Kehadiran','Kehilangan'],
-      datasets: [{ data: [Number(percent), 100 - Number(percent)], backgroundColor: ['#00aaff','#ddd'] }]
+      labels: ['Kehadiran','Tidak hadir'],
+      datasets: [{
+        data: [+rec['%KEHADIRAN'], 100 - (+rec['%KEHADIRAN'] || 0)],
+        backgroundColor: ['#4caf50','#e0e0e0']
+      }]
     },
     options: { responsive: true, maintainAspectRatio: false }
+  });
+
+  document.getElementById('download-btn').classList.remove('hidden');
+}
+
+function resetAll(fromCourse=false){
+  document.getElementById('studentSelect').innerHTML = '<option>-- Pilih Pelajar --</option>';
+  document.getElementById('studentSelect').disabled = true;
+  if (!fromCourse){
+    document.getElementById('courseSelect').value = '';
+  }
+  ['infoCard','attendanceChart','download-btn'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
   });
 }
