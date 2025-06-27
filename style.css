@@ -6,8 +6,7 @@ body {
 }
 
 .main-card {
-  width: 210mm;
-  max-width: 100%;
+  width: 180mm;                 /* fits A4 width with margin */
   margin: 0 auto;
 }
 
