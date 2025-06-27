@@ -92,22 +92,17 @@ function setupPdfDownload() {
   window.html2canvas = window.html2canvas; // diperlukan
 
  document.getElementById("download-btn").addEventListener("click", () => {
-  const el = document.querySelector(".main-card");
-  html2canvas(el, { scale: 2, useCORS: true, scrollY: -window.scrollY })
-    .then(canvas => {
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4", hotfixes: ['px_scaling'] });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidthMm = pageWidth - 20; // margin 10mm kiri + kanan
-      const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
-      const posX = (pageWidth - imgWidthMm) / 2;
-      const posY = (pageHeight - imgHeightMm) / 2;
-      pdf.addImage(imgData, "PNG", posX, posY, imgWidthMm, imgHeightMm);
-      pdf.save("pelajar.pdf");
-    })
-    .catch(err => console.error(err));
+  const elem = document.querySelector(".main-card");
+
+  const opt = {
+    margin:       10,                // mm
+    filename:     'pelajar.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(elem).save();
 });
 
 }
