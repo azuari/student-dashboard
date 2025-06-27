@@ -1,18 +1,23 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  margin: 0;
+  display: flex;
+  justify-content: center;
   padding: 20px;
 }
 
 .main-card {
-  width: 180mm;                 /* fits A4 width with margin */
-  margin: 0 auto;
+  max-width: 210mm;           /* Lebar kira-kira untuk A4 */
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  margin: auto;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .logo {
-  width: 100px;
-  margin-bottom: 10px;
+  max-width: 150px;
+  margin: 0 auto 20px;
+  display: block;
 }
 
 .form-group {
@@ -26,35 +31,9 @@ body {
   font-size: 14px;
 }
 
-.btn {
-  padding: 8px 16px;
-  margin: 5px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.btn.primary {
-  background: #007bff;
-  color: #fff;
-  border: none;
-}
-
-.btn.secondary {
-  background: #6c757d;
-  color: #fff;
-  border: none;
-}
-
-.info-card p {
-  font-size: 14px;
-  margin: 4px 0;
-  text-align: left;
-}
-
-.chart {
-  max-width: 300px;
-  max-height: 300px;
-  margin: 20px auto;
+button, .form-group, .info-card, .chart {
+  margin: 10px auto;
+  text-align: center;
 }
 
 .hidden {
@@ -62,7 +41,5 @@ body {
 }
 
 .footer {
-  margin-top: 20px;
-  font-size: 12px;
-  color: #666;
+  margin-top: 30px;
 }
