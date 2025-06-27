@@ -1,45 +1,61 @@
 body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
   display: flex;
   justify-content: center;
-  padding: 20px;
 }
-
 .main-card {
-  max-width: 210mm;           /* Lebar kira-kira untuk A4 */
-  width: 100%;
-  text-align: center;
+  background: #fff;
   padding: 20px;
-  margin: auto;
-  background: white;
+  width: 600px;
+  border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
 }
-
 .logo {
-  max-width: 150px;
-  margin: 0 auto 20px;
   display: block;
+  margin: 0 auto 20px;
+  width: 120px;
+  height: auto;
 }
-
-.form-group {
-  margin-bottom: 10px;
+.left-align {
   text-align: left;
 }
-
+.form-group {
+  margin: 10px 0;
+}
 .dropdown {
   width: 100%;
-  padding: 6px;
+  padding: 8px;
   font-size: 14px;
 }
-
-button, .form-group, .info-card, .chart {
-  margin: 10px auto;
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+.btn {
+  padding: 10px 20px;
+}
+.info-card {
+  background: #fafafa;
+  padding: 15px;
+  margin: 15px 0;
+  text-align: left;
+  font-size: 14px;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  margin: 20px auto;
+}
+footer, .footer {
+  margin-top: 20px;
+  font-size: 12px;
   text-align: center;
 }
-
 .hidden {
   display: none;
-}
-
-.footer {
-  margin-top: 30px;
 }
