@@ -1,4 +1,3 @@
-let currentChart = null;
 const sheetId = "1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g";
 const tabs = ["SMB","SMS","SMO","SMV"];
 let allData = {};
