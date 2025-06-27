@@ -6,7 +6,7 @@ let currentChart = null;
 function fetchCourseData() {
   tabs.forEach(tab => {
     fetch(`https://opensheet.elk.sh/${sheetId}/${tab}`)
-      .then(res => res.json())
+      .then(r => r.json())
       .then(rows => {
         allData[tab] = rows;
         if (Object.keys(allData).length === tabs.length) {
@@ -19,17 +19,24 @@ function fetchCourseData() {
 
 function populateCourses() {
   const sel = document.getElementById("courseSelect");
-  sel.innerHTML = '<option value="">--Pilih--</option>';
-  tabs.forEach(tab => sel.append(new Option(tab, tab)));
+  tabs.forEach(tab => {
+    const opt = document.createElement("option");
+    opt.value = tab;
+    opt.textContent = tab;
+    sel.append(opt);
+  });
 }
 
 function populateStudents() {
   const course = document.getElementById("courseSelect").value;
   const sel = document.getElementById("studentSelect");
-  sel.innerHTML = '<option value="">--Pilih--</option>';
+  sel.innerHTML = "<option value=''>--Pilih--</option>";
   if (course && allData[course]) {
     allData[course].forEach(r => {
-      sel.append(new Option(r["NAMA"], r["NAMA"]));
+      const o = document.createElement("option");
+      o.value = r["NAMA"];
+      o.textContent = r["NAMA"];
+      sel.append(o);
     });
   }
 }
@@ -38,7 +45,7 @@ function showStudentInfo() {
   const course = document.getElementById("courseSelect").value;
   const student = document.getElementById("studentSelect").value;
   if (!course || !student) return;
-  
+
   const rec = allData[course].find(r => r["NAMA"] === student);
   if (!rec) return;
 
@@ -52,9 +59,9 @@ function showStudentInfo() {
   document.getElementById("infoUjian2").textContent = rec["UJIAN 2"] || '-';
 
   document.getElementById("infoCard").classList.remove("hidden");
+
   const chartEl = document.getElementById("attendanceChart");
   chartEl.classList.remove("hidden");
-  
   if (currentChart) currentChart.destroy();
 
   currentChart = new Chart(chartEl, {
@@ -66,7 +73,7 @@ function showStudentInfo() {
         backgroundColor: ['#4caf50','#f44336']
       }]
     },
-    options: { responsive: true }
+    options: {responsive:true, maintainAspectRatio:false}
   });
 
   document.getElementById("download-btn").classList.remove("hidden");
@@ -74,31 +81,34 @@ function showStudentInfo() {
 
 function resetAll() {
   document.getElementById("courseSelect").value = "";
-  document.getElementById("studentSelect").innerHTML = '<option value="">--Pilih--</option>';
+  document.getElementById("studentSelect").innerHTML = "<option value=''>--Pilih--</option>";
   document.getElementById("infoCard").classList.add("hidden");
   document.getElementById("attendanceChart").classList.add("hidden");
   document.getElementById("download-btn").classList.add("hidden");
-  if (currentChart) { currentChart.destroy(); currentChart = null; }
+  if (currentChart) currentChart.destroy();
 }
 
+function setupPdfDownload() {
+  window.html2canvas = window.html2canvas; // diperlukan
+
+  document.getElementById("download-btn").addEventListener("click", () => {
+    const card = document.querySelector(".main-card");
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:'pt', format:'a4', hotfixes:['px_scaling'] });
+
+    doc.html(card, {
+      callback: d => d.save("pelajar.pdf"),
+      margin: [20,20,20,20],
+      html2canvas: { scale: 1, useCORS: true },
+      autoPaging: 'text'
+    });
+  });
+}
+
+// Event assignments
 document.getElementById("courseSelect").addEventListener("change", populateStudents);
 document.getElementById("filter-btn").addEventListener("click", showStudentInfo);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 
-document.getElementById("download-btn").addEventListener("click", () => {
-  window.jsPDF = window.jspdf.jsPDF; // pastikan jsPDF tersedia
-  const doc = new jsPDF('p', 'pt', 'letter');
-  const element = document.querySelector(".main-card");
-
-  doc.html(element, {
-    callback: function(doc) {
-      doc.save("pelajar.pdf");
-    },
-    x: 20,
-    y: 20,
-    html2canvas: { scale: 2, useCORS: true }
-  });
-});
-
-
 fetchCourseData();
+setupPdfDownload();
