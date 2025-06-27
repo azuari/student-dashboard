@@ -1,3 +1,4 @@
+let currentChart = null;
 const sheetId = "1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g";
 const tabs = ["SMB","SMS","SMO","SMV"];
 let allData = {};
@@ -91,20 +92,18 @@ function resetAll() {
 function setupPdfDownload() {
   window.html2canvas = window.html2canvas; // diperlukan
 
- document.getElementById("download-btn").addEventListener("click", () => {
-  const elem = document.querySelector(".main-card");
-
-  const opt = {
-    margin:       10,                // mm
-    filename:     'pelajar.pdf',
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true },
-    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(elem).save();
+ document.getElementById("download-btn").addEventListener("click", async () => {
+  const card = document.querySelector(".main-card");
+  const pdf = new jspdf.jsPDF('p','pt','a4');
+  await pdf.html(card, {
+    callback: (doc) => {
+      doc.save("pelajar.pdf");
+    },
+    margin: [20,20,20,20],
+    autoPaging: true,
+    html2canvas: { scale: 2 }
+  });
 });
-
 }
 
 // Event assignments
