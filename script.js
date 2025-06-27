@@ -1,4 +1,4 @@
-const sheetId = "1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g";
+  const sheetId = "1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g";
 const tabs = ["SMB","SMS","SMO","SMV"];
 let allData = {};
 
@@ -19,7 +19,7 @@ function fetchCourseData() {
 function populateCourses() {
   const sel = document.getElementById("courseSelect");
   tabs.forEach(tab => {
-    const opt = document.createElement("option");
+    let opt = document.createElement("option");
     opt.value = tab;
     opt.textContent = tab;
     sel.append(opt);
@@ -32,7 +32,7 @@ function populateStudents() {
   sel.innerHTML = "<option value=''>--Pilih--</option>";
   if (course && allData[course]) {
     allData[course].forEach(r => {
-      const o = document.createElement("option");
+      let o = document.createElement("option");
       o.value = r["NAMA"];
       o.textContent = r["NAMA"];
       sel.append(o);
@@ -40,7 +40,7 @@ function populateStudents() {
   }
 }
 
-let currentChart;
+//let currentChart;
 
 function showStudentInfo() {
   const course = document.getElementById("courseSelect").value;
@@ -63,6 +63,7 @@ function showStudentInfo() {
   document.getElementById("infoCard").classList.remove("hidden");
   document.getElementById("download-btn").classList.remove("hidden");
 
+  //data kehadiran
   const chartEl = document.getElementById("attendanceChart");
   chartEl.classList.remove("hidden");
   if (currentChart) currentChart.destroy();
@@ -92,7 +93,7 @@ document.getElementById("filter-btn").addEventListener("click", showStudentInfo)
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 document.getElementById("download-btn").addEventListener("click", () => {
   html2canvas(document.querySelector(".main-card")).then(canvas => {
-    jspdf.jsPDF().then(doc => {
+    import("jspdf").then (jsPDF => {
       doc.addImage(canvas.toDataURL(), 'PNG', 10, 10, 180, 0);
       doc.save("pelajar.pdf");
     });
