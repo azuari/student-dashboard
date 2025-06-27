@@ -1,93 +1,84 @@
 // Tentukan ID dan nama sheet anda
 const sheetID = '1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g';
-const sheets = {
-  "SMB": [
-    {code:"SMB101", name:"Ali Ahmad", ic:"900101-01-1234", quiz1:80, quiz2:75, task:85, exam:78, attendance:88},
-    {code:"SMB102", name:"Siti Aminah", ic:"910202-02-2345", quiz1:90, quiz2:93, task:88, exam:91, attendance:95},
-  ],
-  "SMS": [
-    {code:"SMS301", name:"Ahmad Faiz", ic:"920303-03-3456", quiz1:70, quiz2:65, task:72, exam:68, attendance:75},
-  ],
-  "SMO": [],
-  "SMV": []
-};
+const sheetId = 'SPREADSHEET_ID'; // Ganti dengan ID anda
+const sheets = ['SMB','SMS','SMO','SMV'];
+const courseSelect = document.getElementById('courseSelect');
+const studentSelect = document.getElementById('studentSelect');
+const loadBtn = document.getElementById('loadBtn');
+const resetBtn = document.getElementById('resetBtn');
+const cardsContainer = document.getElementById('cardsContainer');
+const chartCanvas = document.getElementById('attendanceChart');
+const downloadBtn = document.getElementById('downloadBtn');
+let attendanceChart;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const cs = document.getElementById("courseSelect"),
-        ss = document.getElementById("studentSelect"),
-        loadBtn = document.getElementById("loadBtn"),
-        clearBtn = document.getElementById("clearBtn"),
-        infoCard = document.getElementById("infoCard"),
-        attendanceChart = document.getElementById("attendanceChart"),
-        downloadBtn = document.getElementById("downloadBtn");
-
-  Object.keys(sheets).forEach(k => {
-    const o = document.createElement("option");
-    o.value = k; o.textContent = k;
-    cs.appendChild(o);
+courseSelect.addEventListener('change', () => {
+  const c = courseSelect.value;
+  if (c) fetchSheet(c).then(data => {
+    populateStudents(data);
+    studentSelect.disabled = false;
+    loadBtn.disabled = false;
   });
-
-  cs.addEventListener("change", () => {
-    ss.innerHTML = '<option value="">-- Pilih Pelajar --</option>';
-    infoCard.classList.add("hidden");
-    attendanceChart.classList.add("hidden");
-    downloadBtn.classList.add("hidden");
-
-    const arr = sheets[cs.value] || [];
-    arr.forEach(p => {
-      const o = document.createElement("option");
-      o.value = p.code;
-      o.textContent = p.name;
-      o.style.fontSize = "10px";
-      ss.appendChild(o);
-    });
+  else clearAll();
+});
+loadBtn.addEventListener('click', () => {
+  const c = courseSelect.value;
+  const sel = studentSelect.value;
+  if (!sel) return alert('Pilih pelajar');
+  fetchSheet(c).then(data => {
+    const s = data.find(r => r.NAMA === sel);
+    if (!s) return alert('Pelajar tiada');
+    showInfo(s); drawChart(s);
+    downloadBtn.hidden = false;
   });
+});
+resetBtn.addEventListener('click', clearAll);
 
-  loadBtn.addEventListener("click", () => {
-    const kursus = cs.value, name = ss.value;
-    if (!kursus || !name) return alert("Sila pilih kursus & pelajar.");
-    const pelajar = sheets[kursus].find(p => p.name === name);
-    if (!pelajar) return;
-
-    document.getElementById("infoCode").textContent = pelajar.code;
-    document.getElementById("infoName").textContent = pelajar.name;
-    document.getElementById("infoIC").textContent = pelajar.ic;
-    document.getElementById("infoQuiz1").textContent = pelajar.quiz1;
-    document.getElementById("infoQuiz2").textContent = pelajar.quiz2;
-    document.getElementById("infoTask").textContent = pelajar.task;
-    document.getElementById("infoExam").textContent = pelajar.exam;
-    infoCard.classList.remove("hidden");
-
-    renderChart(attendanceChart, pelajar.attendance);
-    attendanceChart.classList.remove("hidden");
-    downloadBtn.classList.remove("hidden");
-  });
-
-  clearBtn.addEventListener("click", () => {
-    cs.value = "";
-    ss.innerHTML = '<option value="">-- Pilih Pelajar --</option>';
-    infoCard.classList.add("hidden");
-    attendanceChart.classList.add("hidden");
-    downloadBtn.classList.add("hidden");
-  });
-
-  downloadBtn.addEventListener("click", () => {
-    html2canvas(document.querySelector(".container")).then(canvas => {
-      const img = canvas.toDataURL("image/png");
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ unit: "px", format: [canvas.width, canvas.height] });
-      pdf.addImage(img, "PNG", 0, 0);
-      pdf.save("pelajar.pdf");
-    });
+downloadBtn.addEventListener('click', () => {
+  html2canvas(document.querySelector('.container')).then(canvas => {
+    const img = canvas.toDataURL('image/png');
+    const pdf = new jspdf.jsPDF();
+    pdf.addImage(img, 'PNG', 0, 0, 210, 0);
+    pdf.save('profil_pelajar.pdf');
   });
 });
 
-function renderChart(canvas, att) {
-  const ctx = canvas.getContext("2d");
-  if (window.chart) window.chart.destroy();
-  window.chart = new Chart(ctx, {
-    type: "doughnut",
-    data: { labels:["Hadir","Tidak"], datasets:[{ data:[att,100-att], backgroundColor:["#4CAF50","#eee"] }] },
-    options: { responsive: true, plugins:{ legend:{position:"bottom"} } }
+function fetchSheet(name) {
+  return fetch(`https://opensheet.elk.sh/${sheetId}/${name}`)
+    .then(r => r.json());
+}
+
+function populateStudents(data) {
+  studentSelect.innerHTML = '<option value="">Pilih Pelajar</option>';
+  data.forEach(r => {
+    const o = document.createElement('option');
+    o.value = r.NAMA; o.textContent = r.NAMA;
+    studentSelect.appendChild(o);
   });
+}
+
+function clearAll() {
+  studentSelect.innerHTML = '<option value="">Pilih Pelajar</option>';
+  studentSelect.disabled = true;
+  loadBtn.disabled = true;
+  cardsContainer.innerHTML = '';
+  chartCanvas.style.display = 'none';
+  downloadBtn.hidden = true;
+  if (attendanceChart) attendanceChart.destroy();
+}
+
+function showInfo(s) {
+  cardsContainer.innerHTML = `
+    <div class="card">
+      <p><b>KOD KELAS:</b> ${s['KOD KELAS']}</p>
+      <p><b>NAMA:</b> ${s.NAMA}</p>
+      <p><b>IC:</b> ${s.IC}</p>
+    </div>`;
+}
+
+function drawChart(s) {
+  chartCanvas.style.display = 'block';
+  const val = parseFloat(s['%KEHADIRAN']) || 0;
+  const data = { labels: ['Kehadiran','Tiada'], datasets: [{ data: [val,100-val], backgroundColor: ['#4caf50','#ddd'] }]};
+  if (attendanceChart) attendanceChart.destroy();
+  attendanceChart = new Chart(chartCanvas, { type: 'doughnut', data });
 }
