@@ -5,30 +5,28 @@
   <title>Dashboard Pelajar IKBN</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
+  <div class="main-card">
     <img src="logo-ikbn.png" alt="Logo IKBN" class="logo">
-    <h1>Dashboard Maklumat Pelajar</h1>
-    <div class="controls">
-      <select id="courseSelect">
-        <option value="">Pilih Kursus</option>
-        <option value="SMB">SMB</option>
-        <option value="SMS">SMS</option>
-        <option value="SMO">SMO</option>
-        <option value="SMV">SMV</option>
-      </select>
-      <select id="studentSelect" disabled>
-        <option value="">Pilih Pelajar</option>
-      </select>
-      <button id="loadBtn" disabled>Muatkan Pelajar</button>
-      <button id="resetBtn">Kosongkan</button>
+    <h2>Dashboard Maklumat Pelajar</h2>
+    <div class="form-group">
+      <select id="courseSelect"><option value="">Pilih Kursus...</option></select>
     </div>
-    <div id="cardsContainer"></div>
-    <canvas id="attendanceChart"></canvas>
-    <button id="downloadBtn" hidden>Muat Turun PDF</button>
+    <div class="form-group">
+      <select id="studentSelect" disabled><option value="">Pilih Pelajar...</option></select>
+    </div>
+    <button id="loadBtn" disabled>Muatkan Pelajar</button>
+    <button id="resetBtn">Kosongkan</button>
+
+    <div id="card" class="info-card hidden">
+      <p>KOD KELAS: <span id="infoCode"></span></p>
+      <p>NAMA: <span id="infoName"></span></p>
+      <p>IC: <span id="infoIC"></span></p>
+    </div>
+
+    <canvas id="attendanceChart" class="chart hidden"></canvas>
+    <button id="downloadBtn" class="btn hidden">Muat Turun PDF</button>
     <p class="footer">© by Abu Bakar</p>
   </div>
   <script src="script.js"></script>
