@@ -11,33 +11,26 @@
 <body>
   <div class="container">
     <img src="logo-ikbn.png" alt="Logo IKBN" class="logo">
-
+    <h1>Dashboard Maklumat Pelajar</h1>
     <div class="controls">
       <select id="courseSelect">
-        <option value="">-- Pilih Kursus --</option>
+        <option value="">Pilih Kursus</option>
+        <option value="SMB">SMB</option>
+        <option value="SMS">SMS</option>
+        <option value="SMO">SMO</option>
+        <option value="SMV">SMV</option>
       </select>
-      <select id="studentSelect">
-        <option value="">-- Pilih Pelajar --</option>
+      <select id="studentSelect" disabled>
+        <option value="">Pilih Pelajar</option>
       </select>
-      <button id="loadBtn">Muatkan Pelajar</button>
-      <button id="clearBtn">Kosongkan</button>
+      <button id="loadBtn" disabled>Muatkan Pelajar</button>
+      <button id="resetBtn">Kosongkan</button>
     </div>
-
-    <div id="infoCard" class="info-card hidden">
-      <p><strong>KOD KELAS:</strong> <span id="infoCode"></span></p>
-      <p><strong>NAMA:</strong> <span id="infoName"></span></p>
-      <p><strong>IC:</strong> <span id="infoIC"></span></p>
-      <p><strong>Kuiz 1:</strong> <span id="infoQuiz1"></span></p>
-      <p><strong>Kuiz 2:</strong> <span id="infoQuiz2"></span></p>
-      <p><strong>Tugasan:</strong> <span id="infoTask"></span></p>
-      <p><strong>Ujian:</strong> <span id="infoExam"></span></p>
-    </div>
-
-    <canvas id="attendanceChart" class="chart hidden"></canvas>
-    <button id="downloadBtn" class="btn hidden">Muat Turun PDF</button>
+    <div id="cardsContainer"></div>
+    <canvas id="attendanceChart"></canvas>
+    <button id="downloadBtn" hidden>Muat Turun PDF</button>
     <p class="footer">© by Abu Bakar</p>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
