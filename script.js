@@ -61,21 +61,14 @@ function showStudentInfo() {
   document.getElementById("infoCard").classList.remove("hidden");
 
   const chartEl = document.getElementById("attendanceChart");
+  const ctx = chartEl.getContext('2d');
   chartEl.classList.remove("hidden");
-  if (currentChart) currentChart.destroy();
-
-  currentChart = new Chart(chartEl, {
+  if (window.currentChart) window.currentChart.destroy();
+  window.currentChart = new Chart(ctx, {
     type: 'doughnut',
-    data: {
-      labels: ['Hadir', 'Tidak Hadir'],
-      datasets: [{
-        data: [rec["%KEHADIRAN"], 100 - rec["%KEHADIRAN"]],
-        backgroundColor: ['#4caf50','#f44336']
-      }]
-    },
-    options: { animation: false }
+    data: {...},
+    options: { responsive: true, maintainAspectRatio: false }
   });
-
   document.getElementById("download-btn").classList.remove("hidden");
 }
 
