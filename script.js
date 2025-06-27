@@ -86,14 +86,19 @@ document.getElementById("filter-btn").addEventListener("click", showStudentInfo)
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 
 document.getElementById("download-btn").addEventListener("click", () => {
-  const el = document.querySelector(".main-card");
-  html2canvas(el).then(canvas => {
-    import("jspdf").then(jsPDF => {
-      const doc = new jsPDF.jsPDF();
-      doc.addImage(canvas.toDataURL("image/png"), 'PNG', 10, 10, 180, 0);
+  window.jsPDF = window.jspdf.jsPDF; // pastikan jsPDF tersedia
+  const doc = new jsPDF('p', 'pt', 'letter');
+  const element = document.querySelector(".main-card");
+
+  doc.html(element, {
+    callback: function(doc) {
       doc.save("pelajar.pdf");
-    });
+    },
+    x: 20,
+    y: 20,
+    html2canvas: { scale: 2, useCORS: true }
   });
 });
+
 
 fetchCourseData();
