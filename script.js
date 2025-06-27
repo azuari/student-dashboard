@@ -53,7 +53,6 @@ function showStudentInfo() {
   document.getElementById("infoCode").textContent = rec["KOD KELAS"];
   document.getElementById("infoName").textContent = rec["NAMA"];
   document.getElementById("infoIC").textContent = rec["IC"];
-
   document.getElementById("infoQuiz").textContent = rec["KUIZ 1"] || '-';
   document.getElementById("infoQuiz2").textContent = rec["KUIZ 2"] || '-';
   document.getElementById("infoTugasan").textContent = rec["TUGASAN"] || '-';
@@ -61,22 +60,22 @@ function showStudentInfo() {
   document.getElementById("infoUjian2").textContent = rec["UJIAN 2"] || '-';
 
   document.getElementById("infoCard").classList.remove("hidden");
-  document.getElementById("download-btn").classList.remove("hidden");
-
+ 
   //data kehadiran
   const chartEl = document.getElementById("attendanceChart");
   chartEl.classList.remove("hidden");
   if (currentChart) currentChart.destroy();
-  currentChart = new Chart(chartEl, {
+  new Chart(chartEl, {
     type: 'doughnut',
     data: {
       labels: ['Hadir', 'Tidak Hadir'],
       datasets: [{
-        data: [parseFloat(rec["%KEHADIRAN"]) || 0, 100 - (parseFloat(rec["%KEHADIRAN"]) || 0)],
+        data: [rec["%KEHADIRAN"], 100 - rec["%KEHADIRAN"]],
         backgroundColor: ['#4caf50','#f44336']
       }]
     }
   });
+   document.getElementById("download-btn").classList.remove("hidden");
 }
 
 function resetAll() {
@@ -91,9 +90,11 @@ function resetAll() {
 document.getElementById("courseSelect").addEventListener("change", populateStudents);
 document.getElementById("filter-btn").addEventListener("click", showStudentInfo);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
+
 document.getElementById("download-btn").addEventListener("click", () => {
   html2canvas(document.querySelector(".main-card")).then(canvas => {
     import("jspdf").then (jsPDF => {
+      const doc = new jsPDF.jsPDF();
       doc.addImage(canvas.toDataURL(), 'PNG', 10, 10, 180, 0);
       doc.save("pelajar.pdf");
     });
