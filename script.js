@@ -1,66 +1,51 @@
 // Tentukan ID dan nama sheet anda
 const sheetID = '1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g';
-const kursusSheet = 'MASTER'; // sheet kursus & pelajar
-
-let courses = [], students = [];
+const sheets = ['SMB','SMS','SMO','SMV'];
+let students = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadData();
+  const kursusSel = document.getElementById('courseSelect');
+  sheets.forEach(s => kursusSel.add(new Option(s, s)));
 
   document.getElementById('filter-btn')
-    .addEventListener('click', filterStudent);
-
+    .addEventListener('click', loadStudents);
+  document.getElementById('studentSelect')
+    .addEventListener('change', showStudentInfo);
   document.getElementById('download-btn')
     .addEventListener('click', downloadPDF);
 });
 
-function loadData(){
-  const url = `https://opensheet.elk.sh/${sheetId}/${kursusSheet}`;
-  fetch(url)
+function loadStudents(){
+  const sheet = document.getElementById('courseSelect').value;
+  if(!sheet) return alert('Sila pilih kursus');
+
+  fetch(`https://opensheet.elk.sh/${sheetId}/${sheet}`)
     .then(r => r.json())
     .then(data => {
-      const sel = document.getElementById('courseSelect');
-      courses = [...new Set(data.map(r => r['KURSUS']))];
-      courses.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.text = c;
-        sel.append(opt);
+      students = data;
+      const sel = document.getElementById('studentSelect');
+      sel.innerHTML = '<option value="">-- Pilih Pelajar --</option>';
+      data.forEach(r => {
+        sel.add(new Option(r['NAMA'], r['IC']));
       });
-      students = data; 
+
+      document.getElementById('infoCard').classList.add('hidden');
+      document.getElementById('attendanceChart').classList.add('hidden');
+      document.getElementById('download-btn').classList.add('hidden');
     })
-    .catch(e => alert('Gagal muat kursus: ' + e));
+    .catch(e => alert('Gagal muat pelajar: ' + e));
 }
 
-function filterStudent(){
-  const kursus = document.getElementById('courseSelect').value;
-  const filtered = students.filter(r => r['KURSUS'] === kursus);
-  const sel = document.getElementById('studentSelect');
-  sel.innerHTML = '';
-  filtered.forEach(r => {
-    const o = document.createElement('option');
-    o.value = r['IC'];
-    o.text = `${r['KOD KELAS']} • ${r['NAMA']}`;
-    sel.append(o);
-  });
-}
+function showStudentInfo(){
+  const ic = this.value;
+  const info = students.find(r => r['IC'] === ic);
+  if(!info) return;
 
-function showInfo(){
-  const ic = document.getElementById('studentSelect').value;
-  return students.find(r => r['IC'] === ic);
-}
+  document.getElementById('infoCode').textContent = info['KOD KELAS'] || '';
+  document.getElementById('infoName').textContent = info['NAMA'] || '';
+  document.getElementById('infoIC').textContent = info['IC'] || '';
 
-function filterStudent(){
-  const info = showInfo();
-  if(!info){
-    alert('Sila pilih pelajar');
-    return;
-  }
   document.getElementById('infoCard').classList.remove('hidden');
-  document.getElementById('infoCode').textContent = info['KOD KELAS'];
-  document.getElementById('infoName').textContent = info['NAMA'];
-  document.getElementById('infoIC').textContent = info['IC'];
-
   renderChart(info);
   document.getElementById('attendanceChart').classList.remove('hidden');
   document.getElementById('download-btn').classList.remove('hidden');
@@ -70,23 +55,22 @@ function renderChart(info){
   const ctx = document.getElementById('attendanceChart').getContext('2d');
   if(window.chart) window.chart.destroy();
 
+  const percent = parseFloat(info['%KEHADIRAN']) || 0;
+  const not = 100 - percent;
+
   window.chart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Kehadiran', 'Tiada'],
-      datasets: [{
-        data: [
-          parseFloat(info['%KEHADIRAN']),
-          100 - parseFloat(info['%KEHADIRAN'])
-        ],
-        backgroundColor: ['#007bff', '#e9ecef']
+      labels: ['Kehadiran','Tidak Hadir'],
+      datasets:[{
+        data:[percent, not],
+        backgroundColor:['#007bff','#e9ecef']
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
+    options:{
+      responsive:true,
       cutout: '70%',
-      plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } } }
+      plugins:{ legend: { position:'bottom', labels:{ font:{ size:12 } } } }
     }
   });
 }
@@ -95,12 +79,11 @@ function downloadPDF(){
   const card = document.querySelector('.main-card');
   html2canvas(card).then(canvas => {
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({orientation:'portrait', unit:'pt', format:'a4'});
+    const pdf = new jsPDF({orientation:'portrait', format:'a4'});
     const img = canvas.toDataURL('image/png');
-    const imgProps = pdf.getImageProperties(img);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const h = (canvas.height * pdfW) / canvas.width;
+    pdf.addImage(img,'PNG',0,0,pdfW,h);
     pdf.save('DashboardPelajar.pdf');
   });
 }
