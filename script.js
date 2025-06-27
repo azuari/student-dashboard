@@ -1,6 +1,6 @@
 // Tentukan ID dan nama sheet anda
 const sheetID = '1sGcf2OXu9DjStT2QZs1oxKen9kLYYzrsRkMGP4bQ-1g';
-const sheets = ['SMB','SMS','SMO','SMV'];
+const sheets = ['  ','SMB','SMS','SMO','SMV'];
 let students = [];
 
 document.addEventListener('DOMContentLoaded', () => {
