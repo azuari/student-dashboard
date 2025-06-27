@@ -13,12 +13,13 @@ body {
 }
 .logo {
   width: 100px;
+  display: block;
   margin: 0 auto 10px;
 }
 .dropdown {
   width: 100%;
   padding: 8px;
-  margin: 10px 0;
+  margin-bottom: 10px;
   font-size: 14px;
 }
 .btn {
