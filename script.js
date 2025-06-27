@@ -12,8 +12,7 @@ function fetchCourseData() {
         if (Object.keys(allData).length === tabs.length) {
           populateCourses();
         }
-      })
-      .catch(err => console.error("Fetch error:", err));
+      }).catch(console.error);
   });
 }
 
@@ -30,7 +29,7 @@ function populateCourses() {
 function populateStudents() {
   const course = document.getElementById("courseSelect").value;
   const sel = document.getElementById("studentSelect");
-  sel.innerHTML = "<option value=''>--Pilih--</option>";
+  sel.innerHTML = `<option value="">--Pilih--</option>`;
   if (course && allData[course]) {
     allData[course].forEach(r => {
       const o = document.createElement("option");
@@ -49,14 +48,15 @@ function showStudentInfo() {
   const rec = allData[course].find(r => r["NAMA"] === student);
   if (!rec) return;
 
-  document.getElementById("infoCode").textContent = rec["KOD KELAS"];
-  document.getElementById("infoName").textContent = rec["NAMA"];
-  document.getElementById("infoIC").textContent = rec["IC"];
-  document.getElementById("infoQuiz").textContent = rec["KUIZ 1"] || '-';
-  document.getElementById("infoQuiz2").textContent = rec["KUIZ 2"] || '-';
-  document.getElementById("infoTugasan").textContent = rec["TUGASAN"] || '-';
-  document.getElementById("infoUjian1").textContent = rec["UJIAN 1"] || '-';
-  document.getElementById("infoUjian2").textContent = rec["UJIAN 2"] || '-';
+  ["Code","Name","IC","Quiz","Quiz2","Tugasan","Ujian1","Ujian2"].forEach(k => {
+    document.getElementById("info" + k).textContent = rec[k === "Code" ? "KOD KELAS" : 
+      k === "Name" ? "NAMA" :
+      k === "IC" ? "IC" :
+      k === "Quiz" ? "KUIZ 1" :
+      k === "Quiz2" ? "KUIZ 2" :
+      k === "Tugasan" ? "TUGASAN" :
+      k === "Ujian1" ? "UJIAN 1" : "UJIAN 2"] || '-';
+  });
 
   document.getElementById("infoCard").classList.remove("hidden");
 
@@ -73,7 +73,7 @@ function showStudentInfo() {
         backgroundColor: ['#4caf50','#f44336']
       }]
     },
-    options: {responsive:true, maintainAspectRatio:false}
+    options: { animation: false }
   });
 
   document.getElementById("download-btn").classList.remove("hidden");
@@ -81,34 +81,28 @@ function showStudentInfo() {
 
 function resetAll() {
   document.getElementById("courseSelect").value = "";
-  document.getElementById("studentSelect").innerHTML = "<option value=''>--Pilih--</option>";
+  document.getElementById("studentSelect").innerHTML = `<option value="">--Pilih--</option>`;
   document.getElementById("infoCard").classList.add("hidden");
   document.getElementById("attendanceChart").classList.add("hidden");
   document.getElementById("download-btn").classList.add("hidden");
-  if (currentChart) currentChart.destroy();
+  if (currentChart) {
+    currentChart.destroy();
+    currentChart = null;
+  }
 }
 
-function setupPdfDownload() {
-  window.html2canvas = window.html2canvas; // diperlukan
-
- document.getElementById("download-btn").addEventListener("click", async () => {
-  const card = document.querySelector(".main-card");
-  const pdf = new jspdf.jsPDF('p','pt','a4');
-  await pdf.html(card, {
-    callback: (doc) => {
-      doc.save("pelajar.pdf");
-    },
-    margin: [20,20,20,20],
-    autoPaging: true,
-    html2canvas: { scale: 2 }
-  });
-});
-}
-
-// Event assignments
 document.getElementById("courseSelect").addEventListener("change", populateStudents);
 document.getElementById("filter-btn").addEventListener("click", showStudentInfo);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 
+document.getElementById("download-btn").addEventListener("click", () => {
+  const canvas = document.getElementById("attendanceChart");
+  const img = canvas.toDataURL('image/png', 1.0);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'p', unit:'mm', format:'a4' });
+  const width = doc.internal.pageSize.getWidth() - 20;
+  doc.addImage(img, 'PNG', 10, 100, width, width * canvas.height / canvas.width);
+  doc.save("pelajar.pdf");
+});
+
 fetchCourseData();
-setupPdfDownload();
