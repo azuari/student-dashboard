@@ -91,7 +91,7 @@ function resetAll() {
 function setupPdfDownload() {
   window.html2canvas = window.html2canvas; // diperlukan
 
-  document.getElementById("download-btn").addEventListener("click", () => {
+ document.getElementById("download-btn").addEventListener("click", () => {
     const card = document.querySelector(".main-card");
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit:'pt', format:'a4', hotfixes:['px_scaling'] });
