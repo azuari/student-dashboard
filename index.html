@@ -9,32 +9,32 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="card main-card">
+  <div class="container">
     <img src="logo-ikbn.png" alt="Logo IKBN" class="logo">
-    <h2>Dashboard Maklumat Pelajar</h2>
 
-    <div class="form-group">
-      <label for="courseSelect">Pilih Kursus:</label>
-      <select id="courseSelect" class="dropdown"></select>
+    <div class="controls">
+      <select id="courseSelect">
+        <option value="">-- Pilih Kursus --</option>
+      </select>
+      <select id="studentSelect">
+        <option value="">-- Pilih Pelajar --</option>
+      </select>
+      <button id="loadBtn">Muatkan Pelajar</button>
+      <button id="clearBtn">Kosongkan</button>
     </div>
-
-    <div class="form-group">
-      <label for="studentSelect">Pilih Pelajar:</label>
-      <select id="studentSelect" class="dropdown"></select>
-    </div>
-
-    <button id="filter-btn" class="btn primary">Muatkan Pelajar</button>
 
     <div id="infoCard" class="info-card hidden">
       <p><strong>KOD KELAS:</strong> <span id="infoCode"></span></p>
       <p><strong>NAMA:</strong> <span id="infoName"></span></p>
       <p><strong>IC:</strong> <span id="infoIC"></span></p>
+      <p><strong>Kuiz 1:</strong> <span id="infoQuiz1"></span></p>
+      <p><strong>Kuiz 2:</strong> <span id="infoQuiz2"></span></p>
+      <p><strong>Tugasan:</strong> <span id="infoTask"></span></p>
+      <p><strong>Ujian:</strong> <span id="infoExam"></span></p>
     </div>
 
     <canvas id="attendanceChart" class="chart hidden"></canvas>
-
-    <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
-
+    <button id="downloadBtn" class="btn hidden">Muat Turun PDF</button>
     <p class="footer">© by Abu Bakar</p>
   </div>
 
