@@ -28,19 +28,19 @@ body {
 }
 .info-card {
   background: #eef;
-  padding: 12px;
-  margin-top: 10px;
+  padding: 10px;
+  margin: 10px 0;
   font-size: 14px;
   border-radius: 5px;
-  text-align: left;
 }
-.info-card p { margin: 4px 0; }
 .chart {
-  max-width: 300px;
-  margin: 10px auto;
+  max-width: 100%;
+  margin: 10px 0;
 }
 .footer {
   margin-top: 20px;
   font-size: 12px;
 }
-.hidden { display: none; }
+.hidden {
+  display: none;
+}
