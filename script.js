@@ -19,7 +19,7 @@ function fetchCourseData() {
 function populateCourses() {
   const sel = document.getElementById("courseSelect");
   tabs.forEach(tab => {
-    let opt = document.createElement("option");
+    const opt = document.createElement("option");
     opt.value = tab;
     opt.textContent = tab;
     sel.append(opt);
@@ -32,7 +32,7 @@ function populateStudents() {
   sel.innerHTML = "<option value=''>--Pilih--</option>";
   if (course && allData[course]) {
     allData[course].forEach(r => {
-      let o = document.createElement("option");
+      const o = document.createElement("option");
       o.value = r["NAMA"];
       o.textContent = r["NAMA"];
       sel.append(o);
@@ -40,32 +40,42 @@ function populateStudents() {
   }
 }
 
+let currentChart;
+
 function showStudentInfo() {
   const course = document.getElementById("courseSelect").value;
   const student = document.getElementById("studentSelect").value;
   if (!course || !student) return;
+
   const rec = allData[course].find(r => r["NAMA"] === student);
   if (!rec) return;
+
   document.getElementById("infoCode").textContent = rec["KOD KELAS"];
   document.getElementById("infoName").textContent = rec["NAMA"];
   document.getElementById("infoIC").textContent = rec["IC"];
-  document.getElementById("infoCard").classList.remove("hidden");
 
-  // Data kehadiran
+  document.getElementById("infoQuiz").textContent = rec["KUIZ 1"] || '-';
+  document.getElementById("infoQuiz2").textContent = rec["KUIZ 2"] || '-';
+  document.getElementById("infoTugasan").textContent = rec["TUGASAN"] || '-';
+  document.getElementById("infoUjian1").textContent = rec["UJIAN 1"] || '-';
+  document.getElementById("infoUjian2").textContent = rec["UJIAN 2"] || '-';
+
+  document.getElementById("infoCard").classList.remove("hidden");
+  document.getElementById("download-btn").classList.remove("hidden");
+
   const chartEl = document.getElementById("attendanceChart");
   chartEl.classList.remove("hidden");
-  new Chart(chartEl, {
+  if (currentChart) currentChart.destroy();
+  currentChart = new Chart(chartEl, {
     type: 'doughnut',
     data: {
       labels: ['Hadir', 'Tidak Hadir'],
       datasets: [{
-        data: [rec["%KEHADIRAN"], 100 - rec["%KEHADIRAN"]],
+        data: [parseFloat(rec["%KEHADIRAN"]) || 0, 100 - (parseFloat(rec["%KEHADIRAN"]) || 0)],
         backgroundColor: ['#4caf50','#f44336']
       }]
     }
   });
-
-  document.getElementById("download-btn").classList.remove("hidden");
 }
 
 function resetAll() {
@@ -74,16 +84,15 @@ function resetAll() {
   document.getElementById("infoCard").classList.add("hidden");
   document.getElementById("attendanceChart").classList.add("hidden");
   document.getElementById("download-btn").classList.add("hidden");
+  if (currentChart) currentChart.destroy();
 }
 
 document.getElementById("courseSelect").addEventListener("change", populateStudents);
 document.getElementById("filter-btn").addEventListener("click", showStudentInfo);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
-
 document.getElementById("download-btn").addEventListener("click", () => {
   html2canvas(document.querySelector(".main-card")).then(canvas => {
-    import("jspdf").then(jsPDF => {
-      const doc = new jsPDF.jsPDF();
+    jspdf.jsPDF().then(doc => {
       doc.addImage(canvas.toDataURL(), 'PNG', 10, 10, 180, 0);
       doc.save("pelajar.pdf");
     });
