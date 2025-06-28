@@ -38,28 +38,17 @@ document.getElementById("filter-btn").addEventListener("click",()=>{
   if (currentChart) currentChart.destroy();
 
   currentChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Hadir', 'Tidak Hadir'],
-      datasets: [{
-        data: [rec["%KEHADIRAN"], 100 - rec["%KEHADIRAN"]],
-        backgroundColor: ['#4caf50','#f44336']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        datalabels: {
-          color: '#fff',
-          formatter: v => v + '%'
-        },
-        legend: {position: 'bottom'}
-      }
-    },
-    plugins: [ChartDataLabels]
-  });
-}
+  type: 'doughnut',
+  data: { /* … */ },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false, // allows to fit container :contentReference[oaicite:4]{index=4}
+    plugins: {
+      legend: { display: false },
+    }
+  }
+});
+});
 document.getElementById("download-btn").addEventListener("click",()=>{
   html2canvas(document.querySelector(".main-card"),{scale:2}).then(canvas=>{
     const img = canvas.toDataURL("image/png");
