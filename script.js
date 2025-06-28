@@ -40,6 +40,8 @@ function populateStudents() {
   }
 }
 
+let currentChart;
+
 function showStudentInfo() {
   const course = document.getElementById("courseSelect").value;
   const student = document.getElementById("studentSelect").value;
@@ -60,14 +62,26 @@ function showStudentInfo() {
 
   document.getElementById("infoCard").classList.remove("hidden");
 
-  const chartEl = document.getElementById("attendanceChart");
-  const ctx = chartEl.getContext('2d');
-  chartEl.classList.remove("hidden");
-  if (window.currentChart) window.currentChart.destroy();
-  window.currentChart = new Chart(ctx, {
+  const ctx = document.getElementById("attendanceChart").getContext('2d');
+  document.querySelector('.chart-container').classList.remove('hidden');
+  if (currentChart) currentChart.destroy();
+
+  currentChart = new Chart(ctx, {
     type: 'doughnut',
-    data: {...},
-    options: { responsive: true, maintainAspectRatio: false }
+    data: {
+      labels: ['Hadir', 'Tidak Hadir'],
+      datasets: [{
+        data: [rec["%KEHADIRAN"], 100 - rec["%KEHADIRAN"]],
+        backgroundColor: ['#4caf50','#f44336']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
   });
   document.getElementById("download-btn").classList.remove("hidden");
 }
@@ -89,13 +103,19 @@ document.getElementById("filter-btn").addEventListener("click", showStudentInfo)
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 
 document.getElementById("download-btn").addEventListener("click", () => {
-  const canvas = document.getElementById("attendanceChart");
-  const img = canvas.toDataURL('image/png', 1.0);
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation:'p', unit:'mm', format:'a4' });
-  const width = doc.internal.pageSize.getWidth() - 20;
-  doc.addImage(img, 'PNG', 10, 100, width, width * canvas.height / canvas.width);
-  doc.save("pelajar.pdf");
+  html2canvas(document.querySelector(".main-card"), { scale: 2 }).then(canvas => {
+    import("jspdf").then(jsPDF => {
+      const doc = new jsPDF.jsPDF({
+        unit: 'pt',
+        format: 'a4'
+      });
+      const img = canvas.toDataURL("image/png");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const imgProps = doc.getImageProperties(img);
+      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+      doc.addImage(img, 'PNG', 0, 0, pageWidth, pdfHeight);
+      doc.save("pelajar.pdf");
+    });
+  });
 });
-
 fetchCourseData();
