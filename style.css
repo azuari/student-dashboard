@@ -1,54 +1,12 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  padding: 20px;
-}
-.main-card {
-  max-width: 600px;
-  margin: auto;
-}
-.logo {
-  display: block;
-  margin: 0 auto 10px;
-  max-width: 120px;
-}
-h2 { text-align: center; }
-.form-group {
-  margin: 10px 0;
-}
-.left {
-  text-align: left;
-  font-size: 14px;
-}
-.dropdown {
-  width: 100%;
-  padding: 6px;
-}
-.center-btns {
-  text-align: center;
-  margin-top: 10px;
-}
-.btn {
-  padding: 8px 16px;
-  margin: 5px;
-}
-.btn.primary { background: #4caf50; color: white; border: none; }
-.btn.secondary { background: #2196f3; color: white; border: none; }
-.info-card {
-  background: #fff;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 6px;
-  font-size: 14px;
-}
-.chart-container {
-  position: relative;
-  height: 200px;
-  margin: 15px 0;
-}
-.hidden { display: none; }
-.footer {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 15px;
-}
+body{font-family:Arial;background:#f4f4f4;padding:20px}
+.main-card{background:#fff;padding:20px;border-radius:8px;max-width:600px;margin:auto;text-align:center}
+.logo{display:block;margin:0 auto 10px;width:100px}
+.left{text-align:left;margin:10px auto;max-width:400px}
+.dropdown{width:100%;padding:8px;font-size:14px}
+.btn{padding:8px 16px;margin:5px}
+.primary{background:#1976d2;color:#fff;border:none}
+.secondary{background:#eee;color:#333;border:none}
+.info-card{margin-top:20px;text-align:left;font-size:14px}
+.chart-container{height:300px;margin:20px auto;max-width:400px}
+.footer{margin-top:20px;font-size:12px}
+.hidden{display:none}
