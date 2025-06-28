@@ -33,17 +33,33 @@ document.getElementById("filter-btn").addEventListener("click",()=>{
   if(!rec) return;
   // Isikan info fields...
   document.getElementById("infoCard").classList.remove("hidden");
-  const ctx = document.getElementById("attendanceChart").getContext("2d");
-  document.querySelector(".chart-container").classList.remove("hidden");
-  if(currentChart) currentChart.destroy();
-  currentChart = new Chart(ctx,{
-    type:"doughnut",
-    data:{labels:["Hadir","Tidak Hadir"],datasets:[{data:[rec["%KEHADIRAN"],100-rec["%KEHADIRAN"]],backgroundColor:["#4caf50","#f44336"]}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}}}
-  });
-  document.getElementById("download-btn").classList.remove("hidden");
-});
+ const ctx = document.getElementById("attendanceChart").getContext('2d');
+  document.querySelector('.chart-container').classList.remove('hidden');
+  if (currentChart) currentChart.destroy();
 
+  currentChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Hadir', 'Tidak Hadir'],
+      datasets: [{
+        data: [rec["%KEHADIRAN"], 100 - rec["%KEHADIRAN"]],
+        backgroundColor: ['#4caf50','#f44336']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          color: '#fff',
+          formatter: v => v + '%'
+        },
+        legend: {position: 'bottom'}
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
 document.getElementById("download-btn").addEventListener("click",()=>{
   html2canvas(document.querySelector(".main-card"),{scale:2}).then(canvas=>{
     const img = canvas.toDataURL("image/png");
