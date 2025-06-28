@@ -1,20 +1,63 @@
-body{font-family:Arial;background:#f4f4f4;padding:20px}
-.main-card{background:#fff;padding:20px;border-radius:8px;max-width:600px;margin:auto;text-align:center}
-.logo{display:block;margin:0 auto 10px;width:100px}
-.left{text-align:left;margin:10px auto;max-width:400px}
-.dropdown{width:100%;padding:8px;font-size:14px}
-.btn{padding:8px 16px;margin:5px}
-.primary{background:#1976d2;color:#fff;border:none}
-.secondary{background:#eee;color:#333;border:none}
-.info-card{margin-top:20px;text-align:left;font-size:14px}
-.chart-container{
+body {
+  font-family: Arial;
+  background: #f4f4f4;
+  padding: 20px;
+}
+.main-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+.logo {
+  display: block;
+  margin: 0 auto 10px;
+  width: 100px; /* saiz logo dimuat di tengah */
+}
+.left {
+  text-align: left;
+  margin: 10px auto;
+  max-width: 400px; /* Untuk label dan paparan info */
+}
+.dropdown {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+.btn {
+  padding: 8px 16px;
+  margin: 5px;
+}
+.primary {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+}
+.secondary {
+  background: #eee;
+  color: #333;
+  border: none;
+}
+.info-card {
+  margin-top: 20px;
+  text-align: left;
+  font-size: 14px;
+}
+.chart-container {
   width: 300px;
   height: 300px;
-  margin: 0 auto;}
+  margin: 0 auto;
+}
 #attendanceChart {
   width: 100% !important;
   height: 100% !important;
 }
-.footer{margin-top:20px;font-size:12px}
-.hidden{display:none}
-
+.footer {
+  margin-top: 20px;
+  font-size: 12px;
+}
+.hidden {
+  display: none;
+}
