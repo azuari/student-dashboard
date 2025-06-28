@@ -9,19 +9,21 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="main-card">
+  <div class="card main-card">
     <img src="logo-ikbn.png" class="logo" alt="Logo IKBN">
     <h2>Dashboard Maklumat Pelajar</h2>
 
-    <div class="form-group left-align">
-      <label>Pilih Kursus:</label>
+    <div class="form-group left">
+      <label for="courseSelect">Pilih Kursus:</label>
       <select id="courseSelect" class="dropdown"><option value="">--Pilih--</option></select>
     </div>
-    <div class="form-group left-align">
-      <label>Pilih Pelajar:</label>
+
+    <div class="form-group left">
+      <label for="studentSelect">Pilih Pelajar:</label>
       <select id="studentSelect" class="dropdown"><option value="">--Pilih--</option></select>
     </div>
-    <div class="button-row">
+
+    <div class="center-btns">
       <button id="filter-btn" class="btn primary">Muatkan Pelajar</button>
       <button id="reset-btn" class="btn secondary">Kosongkan</button>
     </div>
@@ -41,7 +43,10 @@
       <canvas id="attendanceChart"></canvas>
     </div>
 
-    <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
+    <div class="center-btns">
+      <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
+    </div>
+
     <p class="footer">© by Abu Bakar</p>
   </div>
 
