@@ -6,27 +6,35 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head><body>
-  <div class="card main-card">
-    <img src="https://raw.githubusercontent.com/azuari/student-dashboard/main/logo-ikbn.png" class="logo" alt="Logo IKBN">
-    <h2>Dashboard Maklumat Pelajar</h2>
-    <div class="form-group left">
-      <label>Pilih Kursus:</label>
-      <select id="courseSelect"><option value="">--Pilih--</option></select>
-    </div>
-    <div class="form-group left">
-      <label>Pilih Pelajar:</label>
-      <select id="studentSelect"><option value="">--Pilih--</option></select>
-    </div>
-    <button id="filter-btn" class="btn primary">Muatkan Pelajar</button>
-    <button id="reset-btn" class="btn secondary">Kosongkan</button>
-    <div id="infoCard" class="info-card hidden">
-      <!-- Fields... -->
-    </div>
-    <div class="chart-container">
-      <canvas id="attendanceChart"></canvas>
-    </div>
-    <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
-    <p class="footer">© by Abu Bakar</p>
+  <div class="main-card">
+  <img src="logo-ikbn.png" class="logo" alt="Logo IKBN">
+  <h2>Dashboard Maklumat Pelajar</h2>
+
+  <div class="form-group left">
+    <label for="courseSelect">Pilih Kursus:</label>
+    <select id="courseSelect" class="dropdown"></select>
   </div>
-  <script src="script.js"></script>
+
+  <div class="form-group left">
+    <label for="studentSelect">Pilih Pelajar:</label>
+    <select id="studentSelect" class="dropdown"></select>
+  </div>
+
+  <button id="filter-btn" class="btn primary">Muatkan Pelajar</button>
+  <button id="reset-btn" class="btn secondary">Kosongkan</button>
+
+  <div id="infoCard" class="info-card hidden">
+    <p><strong>KOD KELAS:</strong> <span id="infoCode"></span></p>
+    <!-- dan seterusnya -->
+  </div>
+
+  <div class="chart-container hidden">
+    <canvas id="attendanceChart"></canvas>
+  </div>
+
+  <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
+
+  <p class="footer">© by Abu Bakar</p>
+</div>
+<script src="script.js"></script>
 </body></html>
