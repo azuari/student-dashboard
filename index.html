@@ -1,40 +1,53 @@
-<!DOCTYPE html><html lang="ms"><head>
+<!DOCTYPE html>
+<html lang="ms">
+<head>
   <meta charset="UTF-8">
-  <title>Dashboard Pelajar IKBN</title>
+  <title>Dashboard Maklumat Pelajar</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
-</head><body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
   <div class="main-card">
-  <img src="logo-ikbn.png" class="logo" alt="Logo IKBN">
-  <h2>Dashboard Maklumat Pelajar</h2>
+    <img src="https://raw.githubusercontent.com/user/ikbn/main/logo.png" alt="Logo IKBN">
 
-  <div class="form-group left">
-    <label for="courseSelect">Pilih Kursus:</label>
-    <select id="courseSelect" class="dropdown"></select>
+    <h2>Dashboard Maklumat Pelajar</h2>
+
+    <div class="left">
+      <label for="courseSelect">Pilih Kursus:</label>
+      <select id="courseSelect" class="dropdown">
+        <option value="">-- Pilih Kursus --</option>
+      </select>
+
+      <label for="studentSelect">Pilih Pelajar:</label>
+      <select id="studentSelect" class="dropdown">
+        <option value="">-- Pilih Pelajar --</option>
+      </select>
+    </div>
+
+    <button id="filter-btn" class="btn primary">Muatkan Pelajar</button>
+    <button id="reset-btn" class="btn secondary">Kosongkan</button>
+
+    <div id="infoCard" class="info-card hidden">
+      <p><strong>KOD KELAS:</strong> <span id="infoCode"></span></p>
+      <p><strong>NAMA:</strong> <span id="infoName"></span></p>
+      <p><strong>IC:</strong> <span id="infoIC"></span></p>
+      <p><strong>KUIZ 1:</strong> <span id="infoQuiz"></span></p>
+      <p><strong>KUIZ 2:</strong> <span id="infoQuiz2"></span></p>
+      <p><strong>TUGASAN:</strong> <span id="infoTugasan"></span></p>
+      <p><strong>UJIAN 1:</strong> <span id="infoUjian1"></span></p>
+      <p><strong>UJIAN 2:</strong> <span id="infoUjian2"></span></p>
+    </div>
+
+    <div class="chart-container hidden">
+      <canvas id="attendanceChart"></canvas>
+    </div>
+
+    <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
+    <p class="footer">© by Abu Bakar</p>
   </div>
 
-  <div class="form-group left">
-    <label for="studentSelect">Pilih Pelajar:</label>
-    <select id="studentSelect" class="dropdown"></select>
-  </div>
-
-  <button id="filter-btn" class="btn primary">Muatkan Pelajar</button>
-  <button id="reset-btn" class="btn secondary">Kosongkan</button>
-
-  <div id="infoCard" class="info-card hidden">
-    <p><strong>KOD KELAS:</strong> <span id="infoCode"></span></p>
-    <!-- dan seterusnya -->
-  </div>
-
-  <div class="chart-container hidden">
-    <canvas id="attendanceChart"></canvas>
-  </div>
-
-  <button id="download-btn" class="btn secondary hidden">Muat Turun PDF</button>
-
-  <p class="footer">© by Abu Bakar</p>
-</div>
-<script src="script.js"></script>
-</body></html>
+  <script src="script.js"></script>
+</body>
+</html>
